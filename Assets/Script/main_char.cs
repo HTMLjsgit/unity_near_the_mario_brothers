@@ -20,6 +20,9 @@ public class main_char : MonoBehaviour
     private AudioSource[] audioSources;
     public GameObject enemycheck;
     public GameObject enemycheck2;
+    private bool jump_ground;
+    public GameObject raputoru_camera;
+    private bool move_yuka = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -41,26 +44,30 @@ public class main_char : MonoBehaviour
         enemycheck enemyscript = enemycheck.GetComponent<enemycheck>();
         enemycheck enemyscript2 = enemycheck2.GetComponent<enemycheck>();
         isGround = groundscript.IsGround();
+        
         isEnemy = enemyscript.IsEnemy();
         isEnemy2 = enemyscript2.IsEnemy();
-       
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
         //Rigidbody2D rb_enemy = 
         if (isGround){
            if (vertical > 0 && !isJump)
               {
                 rb.velocity = new Vector2(0, 15f); //ここでジャンプ調整
-                animator_setting("jump", true);
-                animator_setting("run", false);
-                Debug.Log("ジャンプしたぞ！");
                 //animator_setting("run", false);
                 audioSources[0].Play();
-
                 isJump = true;
+                if(transform.position.y >= 10)
+                {
+                    jump_ground = true;
+                }
+                else
+                {
+                    jump_ground = false;
+                }
+
               }
           else
               {
-                animator_setting("jump", false);
                 isJump = false;
               }
         }
@@ -79,6 +86,22 @@ public class main_char : MonoBehaviour
             animator_setting("naguri", false);
             enemycheck.SetActive(false);
             enemycheck2.SetActive(false);
+        }
+        if (Input.GetKey(KeyCode.X))
+        {
+            if(raputoru_camera != null)
+            {
+                raputoru_camera.SetActive(true);
+
+            }
+        }
+        if (Input.GetKey(KeyCode.X) == false)
+        {
+            if (raputoru_camera != null)
+            {
+                raputoru_camera.SetActive(false);
+
+            }
         }
         if (horizon > 0)
         {
@@ -105,7 +128,9 @@ public class main_char : MonoBehaviour
             // animator_setting("jump", false);
         }
         rb.velocity = new Vector2(scroll * direction, rb.velocity.y);
-
+        animator_setting("ground", isGround);
+        animator_setting("jump", isJump);
+        animator_setting("jump-ground", jump_ground);
     }
 
 
@@ -122,4 +147,26 @@ public class main_char : MonoBehaviour
         animator.SetBool(name, config);
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.tag == "move_yuka")
+        {
+            transform.SetParent(collision.transform);
+        }
+    }
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "move_yuka")
+        {
+            transform.SetParent(collision.transform);
+        }
+    }
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if(collision.gameObject.tag == "move_yuka")
+        {
+            transform.SetParent(null);
+
+        }
+    }
 }

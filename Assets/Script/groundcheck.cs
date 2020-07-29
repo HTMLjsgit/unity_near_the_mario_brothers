@@ -45,6 +45,7 @@ public class groundcheck : MonoBehaviour
         {
             isGroundExit = true;
         }
+
     }
     // Start is called before the first frame update
     void Start()

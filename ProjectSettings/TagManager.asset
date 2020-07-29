@@ -6,6 +6,11 @@ TagManager:
   tags:
   - ground
   - enemy
+  - player
+  - hantei_camera
+  - tenkan_left
+  - tenkan_right
+  - move_yuka
   layers:
   - Default
   - TransparentFX
@@ -48,4 +53,7 @@ TagManager:
     locked: 0
   - name: exsplosion
     uniqueID: 132396121
+    locked: 0
+  - name: yuka
+    uniqueID: 177675575
     locked: 0
